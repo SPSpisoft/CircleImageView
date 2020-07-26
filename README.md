@@ -2,7 +2,7 @@
 
 CircleImageView是继承ImageView的类，能够显示圆形和圆角矩形的ImageView，还可以设置边框大小颜色，设置ImageView的宽高比例。
 
-![图片](https://github.com/dingjianlun/CircleImageView/1.png)
+![图片](https://github.com/dingjianlun/CircleImageView/blob/master/1.png)
 
 ### 集成
 添加依赖
