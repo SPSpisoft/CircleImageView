@@ -28,4 +28,4 @@ dependencies {
 
 }
 
-apply from: '../../circleimageview-bintray.gradle'
+//apply from: '../../circleimageview-bintray.gradle'
