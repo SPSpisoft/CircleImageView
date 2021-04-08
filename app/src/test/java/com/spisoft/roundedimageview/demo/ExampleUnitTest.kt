@@ -1,4 +1,4 @@
-package com.dingjianlun.circleimageview.demo
+package com.spisoft.roundedimageview.demo
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.dingjianlun.circleimageview
+package com.spisoft.roundedimageview
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -11,7 +11,7 @@ import kotlin.math.min
 import kotlin.math.round
 
 @SuppressLint("AppCompatCustomView")
-class CircleImageView(
+class RoundedImageView(
     context: Context,
     attrs: AttributeSet?,
     defStyleAttr: Int,

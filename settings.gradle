@@ -1,3 +1,3 @@
 include ':circleimageview'
 include ':app'
-rootProject.name = "CircleImageView"
+rootProject.name = "RoundedImageView"
