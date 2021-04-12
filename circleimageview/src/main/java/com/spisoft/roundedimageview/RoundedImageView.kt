@@ -38,6 +38,8 @@ class RoundedImageView(
     private var borderColor = 0
     private var borderWidth = 0
 
+    private var padding = 0
+
     private var leftTopRadius = 0
     private var leftBottomRadius = 0
     private var rightTopRadius = 0
@@ -66,6 +68,8 @@ class RoundedImageView(
 
         borderColor = a.getColor(R.styleable.CircleImageView_civ_border_color, Color.BLACK)
         borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_border_width, 0)
+
+        padding = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_padding, 0)
 
         val radius = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_corner_radius, 0)
 
@@ -120,6 +124,7 @@ class RoundedImageView(
         val h = height
         val bw = bitmap.width
         val bh = bitmap.height
+
 
         val matrix = getMatrix(w, h, bw, bh)
         setBitmapShader(bitmap, matrix, bitmapPaint)
@@ -242,7 +247,7 @@ class RoundedImageView(
         val intrinsicHeight = max(drawable.intrinsicHeight, 1)
         val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+        drawable.setBounds(0 + padding, 0+ padding, intrinsicWidth - padding, intrinsicHeight - padding)
         drawable.draw(canvas)
         canvas.save()
         canvas.restore()

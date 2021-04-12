@@ -11,6 +11,8 @@
         <attr name="civ_border_width" format="dimension" />
         <attr name="civ_border_color" format="color" />
 
+        <attr name="civ_padding" format="dimension" />
+
         <attr name="civ_ratio_width" format="integer" />
         <attr name="civ_ratio_height" format="integer" />
 
