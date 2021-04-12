@@ -10,15 +10,16 @@
 
     <com.spisoft.roundedimageview.RoundedImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="50dp"
+        android:layout_margin="4dp"
         android:scaleType="centerCrop"
         android:src="@drawable/aaa"
         app:civ_padding="30dp"
-        app:civ_border_color="#f00"
-        app:civ_border_width="4dp" />
+        app:civ_border_color="#FBC02D"
+        app:civ_border_width="2dp" />
 
     <com.spisoft.roundedimageview.RoundedImageView
+        android:id="@+id/vv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"

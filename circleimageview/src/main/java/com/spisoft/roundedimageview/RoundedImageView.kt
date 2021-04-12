@@ -10,32 +10,35 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
 
+
 @SuppressLint("AppCompatCustomView")
 class RoundedImageView(
-    context: Context,
-    attrs: AttributeSet?,
-    defStyleAttr: Int,
-    defStyleRes: Int
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int,
+        defStyleRes: Int
 ) : ImageView(context, attrs, defStyleAttr, defStyleRes) {
 
     constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
+            context: Context,
+            attrs: AttributeSet?,
+            defStyleAttr: Int
     ) : this(context, attrs, defStyleAttr, 0)
 
     constructor(
-        context: Context,
-        attrs: AttributeSet?
+            context: Context,
+            attrs: AttributeSet?
     ) : this(context, attrs, 0)
 
     constructor(
-        context: Context
+            context: Context
     ) : this(context, null)
 
+    private lateinit var mCanvas: Canvas
     private var type = Type.Circle
 
     private var borderColor = 0
+    private var pointColor = Color.TRANSPARENT
     private var borderWidth = 0
 
     private var padding = 0
@@ -53,15 +56,19 @@ class RoundedImageView(
         isAntiAlias = true
         style = Paint.Style.STROKE
     }
+    private val pointPaint = Paint().apply {
+        isAntiAlias = true
+        style = Paint.Style.FILL_AND_STROKE
+    }
 
     private var ratio: Float = 0f
 
     init {
         val a = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.CircleImageView,
-            defStyleAttr,
-            defStyleRes
+                attrs,
+                R.styleable.CircleImageView,
+                defStyleAttr,
+                defStyleRes
         )
 
         type = a.getInt(R.styleable.CircleImageView_civ_type, type.i).let { Type.from(it) }
@@ -86,6 +93,10 @@ class RoundedImageView(
         val ratioHeight = a.getInteger(R.styleable.CircleImageView_civ_ratio_height, 0)
         if (ratioWidth != 0 && ratioHeight != 0) ratio = 1f * ratioWidth / ratioHeight
 
+//        var pointColor = a.getColor(R.styleable.CircleImageView_civ_point_color, Color.TRANSPARENT)
+//        if(pointColor >= 0)
+//            drawPoint(mCanvas, width, height, Color.RED)
+
         a.recycle()
     }
 
@@ -104,8 +115,8 @@ class RoundedImageView(
                 w = (h * ratio).toInt()
             }
             super.onMeasure(
-                MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)
+                    MeasureSpec.makeMeasureSpec(w, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY)
             )
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -120,6 +131,7 @@ class RoundedImageView(
 
         val bitmap = drawableToBitmap(drawable)
 
+        this.mCanvas = canvas;
         val w = width
         val h = height
         val bw = bitmap.width
@@ -134,15 +146,17 @@ class RoundedImageView(
             Type.Round -> drawRound(canvas, w, h, matrix, bw, bh)
         }
 
+        if(type == Type.Circle)
+            drawPoint(mCanvas, w, h, this.pointColor)
     }
 
     private fun drawRound(
-        canvas: Canvas,
-        w: Int,
-        h: Int,
-        matrix: Matrix,
-        bw: Int,
-        bh: Int
+            canvas: Canvas,
+            w: Int,
+            h: Int,
+            matrix: Matrix,
+            bw: Int,
+            bh: Int
     ) {
         val values = FloatArray(9) { 0f }
         matrix.getValues(values)
@@ -152,21 +166,21 @@ class RoundedImageView(
         val endY = (values[Matrix.MSCALE_Y] * bh + startY).let { if (it > h) h.toFloat() else it }
 
         rectF.set(
-            startX + borderWidth / 2f,
-            startY + borderWidth / 2f,
-            endX - borderWidth / 2f,
-            endY - borderWidth / 2f
+                startX + borderWidth / 2f,
+                startY + borderWidth / 2f,
+                endX - borderWidth / 2f,
+                endY - borderWidth / 2f
         )
         roundPath.reset()
         roundPath.addRoundRect(
-            rectF,
-            floatArrayOf(
-                leftTopRadius.toFloat(), leftTopRadius.toFloat(),
-                rightTopRadius.toFloat(), rightTopRadius.toFloat(),
-                rightBottomRadius.toFloat(), rightBottomRadius.toFloat(),
-                leftBottomRadius.toFloat(), leftBottomRadius.toFloat()
-            ),
-            Path.Direction.CW
+                rectF,
+                floatArrayOf(
+                        leftTopRadius.toFloat(), leftTopRadius.toFloat(),
+                        rightTopRadius.toFloat(), rightTopRadius.toFloat(),
+                        rightBottomRadius.toFloat(), rightBottomRadius.toFloat(),
+                        leftBottomRadius.toFloat(), leftBottomRadius.toFloat()
+                ),
+                Path.Direction.CW
         )
 
         canvas.drawPath(roundPath, bitmapPaint)
@@ -186,6 +200,22 @@ class RoundedImageView(
             borderPaint.color = borderColor
             borderPaint.strokeWidth = borderWidth.toFloat()
             canvas.drawCircle(w / 2f, h / 2f, radius, borderPaint)
+        }
+    }
+
+    private fun drawPoint(canvas: Canvas, w: Int, h: Int, color: Int) {
+        val radius = (min(w, h) - borderWidth) / 10f
+        val shift = (min(w, h) - borderWidth) / 3 + radius/3
+
+        pointPaint.color = color
+        pointPaint.strokeWidth = borderWidth.toFloat()
+        canvas.drawCircle(w.toFloat() / 2 + shift, h.toFloat() / 2 - shift, radius, pointPaint)
+
+        if(color != Color.TRANSPARENT) {
+            if (borderWidth == 0) borderWidth = 1
+            borderPaint.color = Color.WHITE
+            borderPaint.strokeWidth = borderWidth.toFloat()
+            canvas.drawCircle(w.toFloat() / 2 + shift, h.toFloat() / 2 - shift, radius, borderPaint)
         }
     }
 
@@ -247,7 +277,7 @@ class RoundedImageView(
         val intrinsicHeight = max(drawable.intrinsicHeight, 1)
         val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0 + padding, 0+ padding, intrinsicWidth - padding, intrinsicHeight - padding)
+        drawable.setBounds(0 + padding, 0 + padding, intrinsicWidth - padding, intrinsicHeight - padding)
         drawable.draw(canvas)
         canvas.save()
         canvas.restore()
@@ -259,10 +289,10 @@ class RoundedImageView(
         return Bitmap.createBitmap(scaledWidth, scaledHeight, Bitmap.Config.ARGB_8888).apply {
             Canvas(this).apply {
                 drawBitmap(
-                    bitmap,
-                    Rect(0, 0, bitmap.width, bitmap.height),
-                    RectF(0f, 0f, scaledWidth.toFloat(), scaledHeight.toFloat()),
-                    Paint().apply { isAntiAlias = true; isFilterBitmap = true }
+                        bitmap,
+                        Rect(0, 0, bitmap.width, bitmap.height),
+                        RectF(0f, 0f, scaledWidth.toFloat(), scaledHeight.toFloat()),
+                        Paint().apply { isAntiAlias = true; isFilterBitmap = true }
                 )
                 save()
                 restore()
@@ -288,10 +318,10 @@ class RoundedImageView(
     fun setCornerRadius(radius: Int) = setCornerRadius(radius, radius, radius, radius)
 
     fun setCornerRadius(
-        leftTop: Int = this.leftTopRadius,
-        leftBottom: Int = this.leftBottomRadius,
-        rightTop: Int = this.rightTopRadius,
-        rightBottom: Int = this.rightBottomRadius
+            leftTop: Int = this.leftTopRadius,
+            leftBottom: Int = this.leftBottomRadius,
+            rightTop: Int = this.rightTopRadius,
+            rightBottom: Int = this.rightBottomRadius
     ) = apply {
         if (this.leftTopRadius == leftTop && this.leftBottomRadius == leftBottom &&
             this.rightTopRadius == rightTop && this.rightBottomRadius == rightBottom
@@ -314,5 +344,21 @@ class RoundedImageView(
         this.borderColor = color
         invalidate()
     }
+
+    enum class PointType {
+        RESET, SET, WARNING, ERROR
+    }
+
+    fun setPoint(pointType : PointType) = apply {
+        when (pointType) {
+            PointType.RESET -> this.pointColor = Color.TRANSPARENT
+            PointType.SET -> this.pointColor = Color.GREEN
+            PointType.WARNING -> this.pointColor = Color.parseColor("#FFFBC02D")
+            PointType.ERROR -> this.pointColor = Color.RED
+        }
+
+        invalidate()
+    }
+
 
 }
