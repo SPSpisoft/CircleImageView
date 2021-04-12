@@ -1,3 +1,14 @@
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    
+    dependencies {
+	        implementation 'com.github.SPSpisoft:RoundedImageView:1.0.0'
+	}
+
 ![>>](https://github.com/dingjianlun/CircleImageView/blob/master/1.png)
 
 <com.dingjianlun.circleimageview.CircleImageView
