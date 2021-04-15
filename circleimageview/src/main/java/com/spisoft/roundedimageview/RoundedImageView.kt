@@ -360,5 +360,8 @@ class RoundedImageView(
         invalidate()
     }
 
-
+    fun setSrc(src: Int) = apply {
+        this.setImageResource(src)
+        invalidate()
+    }
 }
