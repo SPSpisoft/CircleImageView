@@ -60,6 +60,7 @@ class RoundedImageView(
         isAntiAlias = true
         style = Paint.Style.FILL_AND_STROKE
     }
+    private var civPointProp: Float = 8f
 
     private var ratio: Float = 0f
 
@@ -77,6 +78,7 @@ class RoundedImageView(
         borderWidth = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_border_width, 0)
 
         padding = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_padding, 0)
+        civPointProp = a.getFloat(R.styleable.CircleImageView_civ_point_prop, 8f)
 
         val radius = a.getDimensionPixelSize(R.styleable.CircleImageView_civ_corner_radius, 0)
 
@@ -204,7 +206,7 @@ class RoundedImageView(
     }
 
     private fun drawPoint(canvas: Canvas, w: Int, h: Int, color: Int) {
-        val radius = (min(w, h) - borderWidth) / 10f
+        val radius = (min(w, h) - borderWidth) / civPointProp
         val shift = (min(w, h) - borderWidth) / 3 + radius/3
 
         pointPaint.color = color

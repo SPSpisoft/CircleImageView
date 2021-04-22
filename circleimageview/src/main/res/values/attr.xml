@@ -25,6 +25,7 @@
             <enum name="round" value="2" />
         </attr>
 
+        <attr name="civ_point_prop" format="float" />
         <attr name="civ_point" format="enum">
             <enum name="reset" value="0" />
             <enum name="set" value="1" />
