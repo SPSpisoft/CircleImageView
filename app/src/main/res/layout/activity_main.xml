@@ -9,6 +9,7 @@
     tools:context=".MainActivity">
 
     <com.spisoft.roundedimageview.RoundedImageView
+        android:id="@+id/vn"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_margin="4dp"

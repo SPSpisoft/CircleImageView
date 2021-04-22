@@ -11,6 +11,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val v = findViewById<RoundedImageView>(R.id.vv)
+        val v0 = findViewById<RoundedImageView>(R.id.vn)
+        v0.setPoint(RoundedImageView.PointType.ERROR)
         v.setSrc(R.drawable.profile_back)
         v.setOnClickListener(View.OnClickListener {
             v.setPoint(RoundedImageView.PointType.WARNING)
